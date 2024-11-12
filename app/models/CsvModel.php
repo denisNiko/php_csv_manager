@@ -88,20 +88,18 @@ class CsvModel {
         $query = "SELECT * FROM customers";
         if($limit !== null) {
             $query .= " LIMIT :limit";
-            if($offset > 0) {
-                $query .= " OFFSET :offset";
-            }
-        } elseif($offset > 0) {
-            $query .= " OFFSET :offset";
+        } 
+        if ($offset > 0) {
+            $query .= $limit !== null ? " OFFSET :offset" : " LIMIT 18446744073709551615 OFFSET :offset";
         }
 
         $stmn = $this->conn->prepare($query);
 
-        if($limit !== null) {
+        if ($limit !== null) {
             $stmn->bindParam(':limit', $limit, PDO::PARAM_INT);
         }
-
-        if($offset > 0) {
+    
+        if ($offset > 0) {
             $stmn->bindParam(':offset', $offset, PDO::PARAM_INT);
         }
 
